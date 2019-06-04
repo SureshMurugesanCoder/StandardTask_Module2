@@ -135,7 +135,7 @@ export default class SelfIntroduction extends React.Component {
                     <React.Fragment>
                         <Form>
                             <Form.Field>
-                                <Form.Field control={Input} name="summary" value={newsummary}
+                                <Form.Field control={Input} name="summary" 
                                     label="Summary must be no more than 150 characters."
                                     placeholder="Please provide a short summary about yourself"
                                     onChange={e => this.setState({ newsummary: e.target.value })}
@@ -143,7 +143,7 @@ export default class SelfIntroduction extends React.Component {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <Form.TextArea fluid control={Input} name="description" value={newdescription}
+                                <Form.TextArea fluid control={Input} name="description" 
                                     label="Description must be between 150-600 characters."
                                     placeholder='Please tell us about any hobbies, additional expertise or anything else you would like to add.'
                                     onChange={e => this.setState({ newdescription: e.target.value })}

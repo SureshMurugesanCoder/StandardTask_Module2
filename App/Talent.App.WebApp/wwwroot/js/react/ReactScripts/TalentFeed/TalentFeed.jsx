@@ -22,10 +22,12 @@ export default class TalentFeed extends React.Component {
             watchlist: [],
             loaderData: loader,
             loadingFeedData: false,
-            companyDetails: null
+            companyDetails: null,
+            profileData: "",
         }
 
         this.init = this.init.bind(this);
+        this.loadData = this.loadData.bind(this);
 
     };
 
@@ -37,15 +39,63 @@ export default class TalentFeed extends React.Component {
 
     componentDidMount() {
         //window.addEventListener('scroll', this.handleScroll);
-        this.init()
+        this.init();
+        this.loadData();
     };
+
+
+    loadData() {
+        var cookies = Cookies.get('talentAuthToken');
+        $.ajax({
+            url: 'http://localhost:60290/profile/profile/getEmployerProfile',
+            headers: {
+                'Authorization': 'Bearer ' + cookies,
+                'Content-Type': 'application/json'
+            },
+            type: "GET",
+            success: function (res) {
+                console.log("Response" + res.employer)
+                this.updateWithoutSave(res.employer)
+            }.bind(this)
+        })
+    }
+
+    updateWithoutSave(newValues) {
+        console.log("updateWithoutSave-Feed");
+        console.log(newValues);
+        let newProfile = Object.assign({}, this.state.profileData, newValues)
+        this.setState({
+            profileData: newProfile
+        }, () => {
+            console.log(this.state.profileData, 'profileData-Callback');
+        });
+        console.log("updateWithoutSave-Feed AFTER:");
+        console.log(this.state.profileData);
+    }
 
    
     render() {
+        console.log("TalentFeed Render");
+        console.log(this.state.loaderData);
 
         return (
             <BodyWrapper reload={this.init} loaderData={this.state.loaderData}>
-                <div className="ui container">Your code goes here</div>
+                <div className="ui grid talent-feed container">
+                    <div className="four wide column">
+                        <CompanyProfile
+                            details={this.state.profileData.companyContact}/>
+                    </div>
+                    <div className="eight wide column">
+                        
+                        <TalentCard />
+                        
+                    </div>
+                    <div className="four wide column">
+                        <div className="ui card">
+                            <FollowingSuggestion />
+                        </div>
+                    </div>
+                </div>
             </BodyWrapper>
         )
     }
